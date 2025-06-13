@@ -39,7 +39,6 @@ class Hunyuan3DPaintConfig:
         self.device = "cuda"
 
         self.multiview_cfg_path = "hy3dpaint/cfgs/hunyuan-paint-pbr.yaml"
-        self.multiview_cfg_path = "cfgs/hunyuan-paint-pbr.yaml"
 
         self.multiview_pretrained_path = "tencent/Hunyuan3D-2.1"
         self.dino_ckpt_path = "facebook/dinov2-giant"
@@ -69,8 +68,7 @@ class Hunyuan3DPaintConfig:
             self.candidate_view_weights.append(0.01)
 
 
-class Hunyuan3DPaintPipeline:
-
+class Hunyuan3DPaintPipeline():
     def __init__(self, config=None) -> None:
         self.config = config if config is not None else Hunyuan3DPaintConfig()
         self.models = {}
@@ -184,7 +182,7 @@ class Hunyuan3DPaintPipeline:
             texture_mr = self.view_processor.texture_inpaint(texture_mr, mask_mr_np)
             self.render.set_texture_mr(texture_mr)
 
-        self.render.save_mesh(output_mesh_path, downsample=True)
+        self.render.save_mesh(output_mesh_path.replace("glb","obj"), downsample=True)
 
         if save_glb:
             convert_obj_to_glb(output_mesh_path, output_mesh_path.replace(".obj", ".glb"))

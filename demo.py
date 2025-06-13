@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0, './hy3dshape')
 sys.path.insert(0, './hy3dpaint')
+sys.path.insert(0, './hy3dpaint/hunyuanpaintpbr')
 
 from PIL import Image
 from hy3dshape.rembg import BackgroundRemover
@@ -37,7 +38,7 @@ conf = Hunyuan3DPaintConfig(max_num_view, resolution)
 paint_pipeline = Hunyuan3DPaintPipeline(conf)
 
 output_mesh_path = 'demo_textured.glb'
-output_mesh_path = paint_pipeline(
+paint_pipeline(
     mesh_path = "demo.glb", 
     image_path = 'assets/demo.png',
     output_mesh_path = output_mesh_path
