@@ -21,6 +21,20 @@ from io import StringIO
 from typing import Optional, Tuple, Dict, Any
 
 
+import trimesh
+import os
+def convert_obj_to_glb_trimesh(obj_filepath: str, glb_filepath: str):
+    if not os.path.exists(obj_filepath):
+        print(f"Error: OBJ file not found at '{obj_filepath}'")
+        return
+    try:
+        mesh_or_scene = trimesh.load(obj_filepath)
+        mesh_or_scene.export(glb_filepath, file_type='glb')
+        print(f"Successfully converted '{obj_filepath}' to '{glb_filepath}'")
+    except Exception as e:
+        print(f"An error occurred during conversion: {e}")
+
+
 def _safe_extract_attribute(obj: Any, attr_path: str, default: Any = None) -> Any:
     """Extract nested attribute safely from object."""
     try:
@@ -266,19 +280,21 @@ def convert_obj_to_glb(
 ) -> bool:
     """Convert OBJ file to GLB format using Blender."""
     try:
-        _setup_blender_scene()
-        _clear_scene_objects()
 
-        # Import OBJ file
-        bpy.ops.wm.obj_import(filepath=obj_path)
-        _select_mesh_objects()
+        convert_obj_to_glb_trimesh(obj_path, glb_path)
+        # _setup_blender_scene()
+        # _clear_scene_objects()
 
-        # Process meshes
-        _merge_vertices_if_needed(merge_vertices)
-        _apply_shading(shade_type, auto_smooth_angle)
+        # # Import OBJ file
+        # bpy.ops.wm.obj_import(filepath=obj_path)
+        # _select_mesh_objects()
 
-        # Export to GLB
-        bpy.ops.export_scene.gltf(filepath=glb_path, use_active_scene=True)
+        # # Process meshes
+        # _merge_vertices_if_needed(merge_vertices)
+        # _apply_shading(shade_type, auto_smooth_angle)
+
+        # # Export to GLB
+        # bpy.ops.export_scene.gltf(filepath=glb_path, use_active_scene=True)
         return True
     except Exception:
         return False

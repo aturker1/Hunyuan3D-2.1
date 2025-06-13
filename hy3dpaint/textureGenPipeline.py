@@ -182,7 +182,7 @@ class Hunyuan3DPaintPipeline():
             texture_mr = self.view_processor.texture_inpaint(texture_mr, mask_mr_np)
             self.render.set_texture_mr(texture_mr)
 
-        self.render.save_mesh(output_mesh_path.replace("glb","obj"), downsample=True)
+        self.render.save_mesh(output_mesh_path, downsample=True)
 
         if save_glb:
             convert_obj_to_glb(output_mesh_path, output_mesh_path.replace(".obj", ".glb"))
