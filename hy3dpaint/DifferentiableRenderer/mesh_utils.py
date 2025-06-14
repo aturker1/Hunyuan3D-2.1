@@ -281,20 +281,19 @@ def convert_obj_to_glb(
     """Convert OBJ file to GLB format using Blender."""
     try:
 
-        convert_obj_to_glb_trimesh(obj_path, glb_path)
-        # _setup_blender_scene()
-        # _clear_scene_objects()
+        _setup_blender_scene()
+        _clear_scene_objects()
 
-        # # Import OBJ file
-        # bpy.ops.wm.obj_import(filepath=obj_path)
-        # _select_mesh_objects()
+        # Import OBJ file
+        bpy.ops.wm.obj_import(filepath=obj_path)
+        _select_mesh_objects()
 
-        # # Process meshes
-        # _merge_vertices_if_needed(merge_vertices)
-        # _apply_shading(shade_type, auto_smooth_angle)
+        # Process meshes
+        _merge_vertices_if_needed(merge_vertices)
+        _apply_shading(shade_type, auto_smooth_angle)
 
-        # # Export to GLB
-        # bpy.ops.export_scene.gltf(filepath=glb_path, use_active_scene=True)
+        # Export to GLB
+        bpy.ops.export_scene.gltf(filepath=glb_path, use_active_scene=True)
         return True
     except Exception:
         return False
