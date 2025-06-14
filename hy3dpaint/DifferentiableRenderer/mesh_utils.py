@@ -198,10 +198,12 @@ def save_mesh(mesh_path, vtx_pos, pos_idx, vtx_uv, uv_idx, texture, metallic=Non
 
 
 def _setup_blender_scene():
+
+    
     """Setup Blender scene for conversion."""
-    if "convert" not in bpy.data.scenes:
-        bpy.data.scenes.new("convert")
-    bpy.context.scene = bpy.data.scenes["convert"]
+    # if "convert" not in bpy.data.scenes:
+    bpy.data.scenes.new("convert")
+    bpy.context.window.scene = bpy.data.scenes["convert"]
 
 
 def _clear_scene_objects():
@@ -283,7 +285,6 @@ def convert_obj_to_glb(
     # Export to GLB
     print(f"Exporting to {glb_path}")
     bpy.ops.export_scene.gltf(filepath=glb_path, use_active_scene=True)
-    print(f"Exported to {glb_path}")
     return True
     # except Exception:
     #     return False
