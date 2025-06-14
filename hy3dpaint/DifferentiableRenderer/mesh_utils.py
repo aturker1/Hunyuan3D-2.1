@@ -198,12 +198,17 @@ def save_mesh(mesh_path, vtx_pos, pos_idx, vtx_uv, uv_idx, texture, metallic=Non
 
 
 def _setup_blender_scene():
+    """Ensure a scene named 'convert' exists and set it as active."""
+    scene_name = "convert"
 
-    
-    """Setup Blender scene for conversion."""
-    if "convert" not in bpy.data.scenes:
-        bpy.data.scenes.new("convert")
-    bpy.context.scene = bpy.data.scenes["convert"]
+    # Create the scene if it doesn't exist
+    if scene_name not in bpy.data.scenes:
+        bpy.data.scenes.new(scene_name)
+
+    # Set it as the active scene for the current window
+    for window in bpy.context.window_manager.windows:
+        window.scene = bpy.data.scenes[scene_name]
+
 
 
 def _clear_scene_objects():
@@ -269,13 +274,32 @@ def convert_obj_to_glb(
 ) -> bool:
     """Convert OBJ file to GLB format using Blender."""
     print("Converting OBJ to GLB...")
-    # try:
-    # _setup_blender_scene()
-    # _clear_scene_objects()
+    _setup_blender_scene()
+    _clear_scene_objects()
 
     # Import OBJ file
     print(f"Importing OBJ file from {obj_path}")
-    bpy.ops.wm.obj_import(filepath=obj_path)
+    # Ensure we have a valid context for the import operation
+    if not os.path.exists(obj_path):
+        print(f"Error: OBJ file {obj_path} does not exist")
+        return False
+        
+    # Use context override to ensure proper context for import
+    try:
+        # Try the newer context override method (Blender 3.2+)
+        with bpy.context.temp_override():
+            bpy.ops.wm.obj_import(filepath=obj_path)
+    except (AttributeError, RuntimeError):
+        # Fallback for older Blender versions or context issues
+        try:
+            # Ensure we're in the right context
+            bpy.context.view_layer.objects.active = None
+            bpy.ops.wm.obj_import(filepath=obj_path)
+        except RuntimeError as e:
+            print(f"Import failed with context override, trying direct import: {e}")
+            # Last resort - try to import directly
+            bpy.ops.import_scene.obj(filepath=obj_path)
+    
     _select_mesh_objects()
     print("Selecting mesh objects...")
     # Process meshes
@@ -286,6 +310,8 @@ def convert_obj_to_glb(
     # Export to GLB
     print(f"Exporting to {glb_path}")
     bpy.ops.export_scene.gltf(filepath=glb_path, use_active_scene=True)
-    return True
-    # except Exception:
-    #     return False
+
+
+
+if __name__ == "__main__":
+    convert_obj_to_glb("demo_textured.obj", "demo_textured.glb")
