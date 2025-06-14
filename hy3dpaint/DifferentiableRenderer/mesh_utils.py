@@ -201,9 +201,9 @@ def _setup_blender_scene():
 
     
     """Setup Blender scene for conversion."""
-    # if "convert" not in bpy.data.scenes:
-    bpy.data.scenes.new("convert")
-    bpy.context.window.scene = bpy.data.scenes["convert"]
+    if "convert" not in bpy.data.scenes:
+        bpy.data.scenes.new("convert")
+    bpy.context.scene = bpy.data.scenes["convert"]
 
 
 def _clear_scene_objects():
@@ -211,6 +211,7 @@ def _clear_scene_objects():
     for obj in bpy.context.scene.objects:
         obj.select_set(True)
         bpy.data.objects.remove(obj, do_unlink=True)
+
 
 
 def _select_mesh_objects():
@@ -269,8 +270,8 @@ def convert_obj_to_glb(
     """Convert OBJ file to GLB format using Blender."""
     print("Converting OBJ to GLB...")
     # try:
-    _setup_blender_scene()
-    _clear_scene_objects()
+    # _setup_blender_scene()
+    # _clear_scene_objects()
 
     # Import OBJ file
     print(f"Importing OBJ file from {obj_path}")
