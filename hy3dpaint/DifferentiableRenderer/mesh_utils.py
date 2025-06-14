@@ -271,14 +271,17 @@ def convert_obj_to_glb(
     _clear_scene_objects()
 
     # Import OBJ file
+    print(f"Importing OBJ file from {obj_path}")
     bpy.ops.wm.obj_import(filepath=obj_path)
     _select_mesh_objects()
-
+    print("Selecting mesh objects...")
     # Process meshes
+    print("Merging vertices if needed...")
     _merge_vertices_if_needed(merge_vertices)
     _apply_shading(shade_type, auto_smooth_angle)
-
+    print("Applying shading...")
     # Export to GLB
+    print(f"Exporting to {glb_path}")
     bpy.ops.export_scene.gltf(filepath=glb_path, use_active_scene=True)
     return True
     # except Exception:
